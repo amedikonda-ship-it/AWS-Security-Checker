@@ -1,5 +1,5 @@
 import boto3
-from checks import iam_checks
+from checks import iam_checks, s3_checks
 import scoring
 import os
 import json
@@ -86,7 +86,8 @@ def lambda_handler(event, context):
         if policies_check.get('Status') == 'FAIL':
             print(f"Users with direct policies: {policies_check.get('Message', {})}")
 
-
+        # check 7 - S3 bucket allows public read (ACL or bucket policy)
+        s3_bucket_public_read_check = s3_checks.s3_public_read_check(session_details)
         
 
         # Invoke Scoring function to calculate the compliance score based on the checks performed.
